@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Part = (props) => (
-    <p>{props.part} {props.exercices}</p>
+    <p>{props.part.name} {props.part.exercices}</p>
 );
 
 const Header = (props) => (
@@ -10,14 +10,14 @@ const Header = (props) => (
 
 const Content = (props) => (
     <>
-        <Part part={props.part1} exercices={props.exercices1}/>
-        <Part part={props.part2} exercices={props.exercices2}/>
-        <Part part={props.part3} exercices={props.exercices3}/>
+        <Part part={props.parts[0]}/>
+        <Part part={props.parts[1]}/>
+        <Part part={props.parts[2]}/>
     </>
 );
 
 const Total = (props) => (
-    <p>Number of exercices {props.exercices1 + props.exercices2 + props.exercices3}</p>
+    <p>Number of exercices {props.parts[0].exercices + props.parts[1].exercices + props.parts[2].exercices}</p> 
 );
 
 const App = () => {
@@ -40,19 +40,8 @@ const App = () => {
     return (
         <div>
             <Header course={course}/>
-            <Content
-                part1={parts[0].name}
-                exercices1={parts[0].exercices}
-                part2={parts[1].name}
-                exercices2={parts[1].exercices}
-                part3={parts[2].name}
-                exercices3={parts[2].exercices}
-            />
-            <Total
-                exercices1={parts[0].exercices}
-                exercices2={parts[1].exercices}
-                exercices3={parts[2].exercices}
-            />
+            <Content parts={parts}/>
+            <Total parts={parts}/>
         </div>
     );
 }
