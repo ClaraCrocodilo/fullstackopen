@@ -6,6 +6,12 @@ const Button = ({ handleClick, text }) => (
     </button>
 );
 
+const StatisticLine = ({ text, value }) => (
+    <>
+        {text} {value} <br />
+    </>
+);
+
 const Statistics = ({ good, neutral, bad }) => {
     const average = (good, neutral, bad) => {
         if (good + neutral + bad != 0) return (good - bad)/(good + neutral + bad);
@@ -29,12 +35,12 @@ const Statistics = ({ good, neutral, bad }) => {
     return (
         <div>
             <h1>statistics</h1>
-            good {good} <br />
-            neutral {neutral} <br />
-            bad {bad} <br />
-            all {good + neutral + bad} <br />
-            average {average(good, neutral, bad)}<br />
-            positive {percentage(good, neutral, bad)}
+            <StatisticLine text="good" value={good} />
+            <StatisticLine text="neutral" value={neutral} />
+            <StatisticLine text="bad" value={bad} />
+            <StatisticLine text="all" value={good + neutral + bad} />
+            <StatisticLine text="average" value={average(good, neutral, bad)} />
+            <StatisticLine text="percentage" value={percentage(good, neutral, bad)} />
         </div>
     );
 };
