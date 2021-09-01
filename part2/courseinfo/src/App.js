@@ -16,15 +16,19 @@ const Content = (props) => {
     );
 };
 
-const Total = (props) => (
-    <p>Number of exercices {props.parts[0].exercices + props.parts[1].exercices + props.parts[2].exercices}</p> 
-);
+const Total = (props) => {
+    const total = props.course.parts.reduce((accumulator, currentValue) => {
+        return { exercices: accumulator.exercices + currentValue.exercices }
+    });
+    return <p><b>total of {total.exercices} exercices</b></p>
+};
 
 const Course = ({ course }) => {
     return (
         <div>
             <Header course={course.name}/>
             <Content parts={course.parts}/>
+            <Total course={course} />
         </div>
     )
 };
@@ -47,6 +51,11 @@ const App = () => {
                 name: "State of a component",
                 exercices: 14,
                 id: 3
+            },
+            {
+                name: "Redux",
+                exercices: 11,
+                id: 4
             }
         ]
     };
