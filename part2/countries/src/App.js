@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const Weather = ({ weather }) => {
+    return (
+    weather.current != undefined &&
+    <div>
+        <h2>Weather in {weather.location.name}</h2>
+        <b>temperature:</b> {weather.current.temperature} Celsius <br/>
+        <img
+            src={weather.current.weather_icons[0]}
+            alt={`${weather.current.weather_descriptions[0]} weather`}
+            width="80px"
+        /><br/>
+        <b>wind:</b> {`${weather.current.wind_speed} mph direction ${weather.current.wind_dir}`}
+    </div>
+);
+}
+
 const Country = ({ country }) => (
     <div>
         <h1>{country.name}</h1>
@@ -22,7 +38,7 @@ const Country = ({ country }) => (
     </div>
 );
 
-const Countries = ({ countries, shownCountries, setShownCountries,
+const Countries = ({ countries, weather, shownCountries, setShownCountries,
     handleShownCountriesChange }) => {
 
 
@@ -36,7 +52,10 @@ const Countries = ({ countries, shownCountries, setShownCountries,
         return <div></div>
     } else if (countries.length === 1) {
         return (
+            <div>
             <Country country={countries[0]}/>
+            <Weather country={countries[0]} weather={weather}/>
+            </div>
         );
     } else {
         return (
@@ -57,13 +76,13 @@ const App = () => {
     const [search, setSearch] = useState('');
     const [countries, setCountries] = useState([]);
     const [shownCountries, setShownCountries] = useState({});
+    const [weather, setWeather] = useState({});
 
     const handleSearchChange = (event) => {
         event.preventDefault();
         setSearch(event.target.value);
     };
     const handleShownCountriesChange = country => () => {
-        console.log(country, shownCountries)
         setShownCountries({...shownCountries,
             [country.name]: !shownCountries[country.name]
         });
@@ -81,6 +100,14 @@ const App = () => {
             .catch(err => setCountries([]));
     }, [search]);
 
+    useEffect(() => {
+        if (countries.length != 1) return null
+        axios.get(`http://api.weatherstack.com/current?access_key=${process.env.REACT_APP_API_KEY}&query=${countries[0].name}`)
+            .then(response => {
+                setWeather(response.data)
+            });
+    }, [countries]);
+
     return (
         <div>
             find countries <input
@@ -89,6 +116,7 @@ const App = () => {
             />
             <Countries 
                 countries={countries}
+                weather={weather}
                 shownCountries={shownCountries}
                 setShownCountries={setShownCountries}
                 handleShownCountriesChange={handleShownCountriesChange}
