@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import numberService from './services/numbers';
 
+const Notification = ({ message }) => {
+    if (message === null) {
+        return null;
+    };
+
+    return (
+        <div className="notification">
+            {message}
+        </div>
+    )
+};
+
 const Filter = ({ filter, handleFilterChange }) => (
     <form>
         <div>
@@ -55,6 +67,7 @@ const App = () => {
     const [newName, setNewName] = useState('');
     const [newNumber, setNewNumber] = useState('');
     const [filter, setFilter] = useState('');
+    const [notification, setNotification] = useState(null);
 
     const handleNameChange = (event) => {
         setNewName(event.target.value);
@@ -86,6 +99,10 @@ const App = () => {
                     .update(id, updatedPerson)
                     .then(returnedPerson => {
                         setPersons(persons.map(p => p.id != id ? p : returnedPerson))
+                        setNotification(`Updated ${returnedPerson.name}`);
+                        setTimeout(() => {
+                            setNotification(null);
+                        }, 5000);
                     });
             };
         } else {
@@ -97,6 +114,10 @@ const App = () => {
                 .create(newPerson)
                 .then(returnedPerson => {
                     setPersons(persons.concat(returnedPerson));
+                    setNotification(`Added ${returnedPerson.name}`)
+                    setTimeout(() => {
+                        setNotification(null);
+                    }, 5000);
                 });
         };
 };
@@ -113,6 +134,8 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+
+            <Notification message={notification} />
 
             <Filter filter={filter} handleFilterChange={handleFilterChange}/>
 
