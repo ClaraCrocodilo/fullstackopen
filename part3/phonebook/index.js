@@ -26,6 +26,18 @@ let persons = [
     }
 ];
 
+const generateId = () => {
+    const existingIds = persons.map(person => person.id);
+    const maxId = 1e6;
+    let newId = ~~(Math.random() * maxId) + 1;
+    while (existingIds.includes(newId)) {
+        newId = ~~(Math.random() * maxId) + 1;
+        console.log(newId);
+    };
+    return newId;
+};
+generateId()
+
 app.get("/info", (request, response) => {
     response.send(`<p>Phonebook has info for ${persons.length} people</p>`
     + `<p> ${new Date()} </p>`
@@ -51,6 +63,17 @@ app.delete("/api/persons/:id", (request, response) => {
     persons = persons.filter(person => person.id !== id);
     console.log("persons", persons)
     response.status(204).end()
+});
+
+app.post("/api/persons", (request, response) => {
+    const body = request.body;
+    const person = {
+        id: generateId(),
+        name: body.name,
+        number: body.number
+    };
+    persons = persons.concat(person);
+    response.json(person);
 });
 
 const PORT = 3001;
