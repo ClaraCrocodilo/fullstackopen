@@ -110,3 +110,23 @@ describe("author with most blogs", () => {
         );
     });
 });
+
+describe("author with most likes", () => {
+    test("when list has only one author, equals that author", () => {
+        expect(listHelper.mostLikes(listWithOneBlog)).toEqual(
+            {
+                author: listWithOneBlog[0].author,
+                likes: listWithOneBlog[0].likes
+            }
+        );
+    });
+    
+    test("of a bigger list is calculated right", () => {
+        expect(listHelper.mostLikes(blogList)).toEqual(
+            {
+                author: "Edsger W. Dijkstra",
+                likes: 17
+            }
+        );
+    });
+});
